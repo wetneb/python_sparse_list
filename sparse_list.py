@@ -12,12 +12,6 @@ wish to store these. cf. Sparse array:
     http://en.wikipedia.org/wiki/Sparse_array
 '''
 
-try:
-    xrange
-except NameError:
-    # On Python 3, range() is equivalent to Python 2's xrange()
-    xrange = range
-
 from six import iteritems, itervalues
 from six.moves import zip_longest
 
@@ -46,7 +40,7 @@ class SparseList(object):
             if index.start:
                 self.size = max(self.size, index.start + len(value))
             s = slice(index.start, index.stop, index.step).indices(self.size)
-            for v, i in enumerate(xrange(*s)):
+            for v, i in enumerate(range(*s)):
                 self.__setitem__(i, value[v])
         except AttributeError:
             self.elements[index] = value
@@ -55,7 +49,7 @@ class SparseList(object):
     def __getitem__(self, index):
         try:
             s = slice(index.start, index.stop, index.step).indices(self.size)
-            return [self[i] for i in xrange(*s)]
+            return [self[i] for i in range(*s)]
         except AttributeError:
             i = slice(index).indices(self.size)[1]
             return self.elements.get(i, self.default)
@@ -68,7 +62,7 @@ class SparseList(object):
 
     def __delitem__(self, item):
         if isinstance(item, slice):
-            indices = xrange(*item.indices(self.size))
+            indices = range(*item.indices(self.size))
         else:
             indices = (item, )
 
@@ -85,7 +79,7 @@ class SparseList(object):
         return self.__delitem__(slice(start, stop))
 
     def __iter__(self):
-        for index in xrange(self.size):
+        for index in range(self.size):
             yield self[index]
 
     def __contains__(self, index):
@@ -141,7 +135,7 @@ class SparseList(object):
 
     def __mul__(self, multiplier):
         result = []
-        for _ in xrange(multiplier):
+        for _ in range(multiplier):
             result += self[:]
         return result
 
